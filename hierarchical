@@ -1,0 +1,29 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.cluster.hierarchy import dendrogram, linkage
+from sklearn.cluster import AgglomerativeClustering
+
+# Step 1: Create the data from sales record
+data = {'sales_amount': [250.00, 75.00, 50.00, 39.00, 150.00]}
+df = pd.DataFrame(data)
+print("Original Data:")
+print(df)
+
+# Step 2: Apply Hierarchical Clustering
+X = df[['sales_amount']].values
+Z = linkage(X, method='ward')
+print(Z)
+
+# Step 3: Plot the Dendrogram using Ward Linkage
+plt.figure(figsize=(10, 5))
+plt.title('Agglomerative Hierarchical Clustering Dendrogram')
+plt.xlabel('Sales ID')
+plt.ylabel('Distance')
+dendrogram(Z)
+plt.show()
+
+# Step 4: Form Clusters
+cluster = AgglomerativeClustering(n_clusters=2, criterion='maxclust')
+cluster.fit(X)
+print("Clustered Data:")
+print(cluster.labels_)
