@@ -1,0 +1,34 @@
+# Experiment 10: PageRank Algorithm Implementation
+
+import numpy as np
+
+# Step 1: Represent the graph as an adjacency matrix
+graph = np.array([
+    [0, 1, 1, 0],  # A links to B, C
+    [0, 0, 1, 0],  # B links to C
+    [1, 0, 0, 1],  # C links to A, D
+    [0, 0, 1, 0]   # D links to C
+])
+
+# Step 2: Initialize parameters
+n = graph.shape[0]
+d = 0.85  # damping factor
+pagerank = np.ones(n) / n
+tolerance = 1e-6
+
+# Step 3: Compute PageRank iteratively
+for _ in range(100):  # max iterations
+    new_pagerank = np.ones(n) * (1 - d) / n
+    for i in range(n):
+        for j in range(n):
+            if graph[j][i] == 1:
+                out_links = np.sum(graph[j])
+                new_pagerank[i] += d * (pagerank[j] / out_links)
+    if np.linalg.norm(new_pagerank - pagerank) < tolerance:
+        break
+    pagerank = new_pagerank
+
+# Step 4: Output final results
+print("PageRank Results:")
+for i in range(n):
+    print(f"Page {chr(65+i)}: {pagerank[i]:.4f}")
