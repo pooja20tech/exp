@@ -1,0 +1,38 @@
+# Experiment 14: ASSOCIATION RULE MINING using Apriori Algorithm
+
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Step 1: Prepare the dataset
+dataset = [
+    ['bread', 'butter'],
+    ['bread', 'jam'],
+    ['bread', 'butter', 'jam'],
+    ['butter', 'jam']
+]
+
+# Step 2: Convert the dataset into a DataFrame
+items = sorted(list(set(item for transaction in dataset for item in transaction)))
+print(items)
+
+# Step 3: Create Transaction Database (One-Hot Encoded)
+encoded_vals = []
+for transaction in dataset:
+    row = {}
+    for item in items:
+        row[item] = 1 if item in transaction else 0
+    encoded_vals.append(row)
+
+df = pd.DataFrame(encoded_vals)
+print("Transaction Dataset (One-Hot Encoded):")
+print(df)
+
+# Step 4: Find Frequent Itemsets
+frequent_itemsets = apriori(df, min_support=0.5, use_colnames=True)
+print("Frequent Itemsets:")
+print(frequent_itemsets)
+
+# Step 5: Generate Association Rules
+rules = association_rules(frequent_itemsets, metric='confidence', min_threshold=0.7)
+print("Association Rules:")
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])
